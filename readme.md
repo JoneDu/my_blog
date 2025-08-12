@@ -21,4 +21,7 @@
 ```shell
    go get -u github.com/gin-gonic/gin
 ```
-...
+### 安装godotenv [gitHub地址](https://github.com/joho/godotenv)
+```shell
+   go get -u github.com/joho/godotenv
+```
