@@ -1,4 +1,4 @@
-package database
+package helpers
 
 import (
 	"github.com/Bruce/my-blog/models"
