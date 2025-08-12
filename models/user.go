@@ -16,3 +16,8 @@ type User struct {
 func (u *User) CreateUser() error {
 	return database.DB.Create(u).Error
 }
+
+func GetUserByEmail(email string) (user User, err error) {
+	err = database.DB.Where("email = ?", email).First(&user).Error
+	return
+}

@@ -7,8 +7,9 @@ import (
 )
 
 type Config struct {
-	DbDriver string
-	DbDsn    string
+	DbDriver  string
+	DbDsn     string
+	JWTSecret string
 }
 
 func LoadConfig() Config {
@@ -17,8 +18,9 @@ func LoadConfig() Config {
 		log.Fatal("Error loading .env file")
 	}
 	return Config{
-		DbDriver: getEnv("DB_DRIVER", "mysql"),
-		DbDsn:    getEnv("DB_DSN", ""),
+		DbDriver:  getEnv("DB_DRIVER", "mysql"),
+		DbDsn:     getEnv("DB_DSN", ""),
+		JWTSecret: getEnv("JWT_SECRET", ""),
 	}
 }
 

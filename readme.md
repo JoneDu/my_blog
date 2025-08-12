@@ -25,3 +25,11 @@
 ```shell
    go get -u github.com/joho/godotenv
 ```
+### 安装jwt
+```shell
+   go get -u github.com/golang-jwt/jwt/v5
+```
+## 项目启动
+```shell
+ go run main.go
+```
