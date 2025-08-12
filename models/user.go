@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"github.com/Bruce/my-blog/database"
 	"gorm.io/gorm"
 )
@@ -18,6 +19,9 @@ func (u *User) CreateUser() error {
 }
 
 func GetUserByEmail(email string) (user User, err error) {
-	err = database.DB.Where("email = ?", email).First(&user).Error
+	database.DB.Where("email = ?", email).First(&user)
+	if user.ID == 0 {
+		err = errors.New("user not found")
+	}
 	return
 }
