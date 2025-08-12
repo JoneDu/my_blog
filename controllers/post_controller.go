@@ -44,10 +44,6 @@ func CreatePost(c *gin.Context) {
 	}
 }
 
-func GetPostById(c *gin.Context) {
-
-}
-
 func GetPosts(c *gin.Context) {
 	type simplePost struct {
 		gorm.Model
@@ -110,5 +106,89 @@ func GetPost(c *gin.Context) {
 }
 
 func DeletePostById(c *gin.Context) {
+	postId := c.Param("id")
+	PostIdInt, err := strconv.Atoi(postId)
+	if err != nil {
+		c.JSON(http.StatusOK, models.Response{
+			Code: http.StatusBadRequest,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	var post models.Post
+	database.DB.First(&post, PostIdInt)
+	if post.ID == 0 {
+		c.JSON(http.StatusOK, models.Response{
+			Code: http.StatusNotFound,
+			Msg:  "post not found",
+		})
+		return
+	}
 
+	userId, _ := c.Get("userId")
+	if post.UserID != userId.(uint) {
+		c.JSON(http.StatusOK, models.Response{
+			Code: http.StatusForbidden,
+			Msg:  "user not allowed",
+		})
+		return
+	}
+
+	err = database.DB.Delete(&models.Post{}, PostIdInt).Error
+	if err != nil {
+		c.JSON(http.StatusOK, models.Response{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+	} else {
+		c.JSON(http.StatusOK, models.Response{
+			Code: http.StatusOK,
+			Msg:  "Post deleted successfully",
+		})
+	}
+}
+
+func UpdatePostById(c *gin.Context) {
+	postId := c.Param("id")
+	PostIdInt, err := strconv.Atoi(postId)
+	if err != nil {
+		c.JSON(http.StatusOK, models.Response{
+			Code: http.StatusBadRequest,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	var postTo PostTO
+	if err := c.BindJSON(&postTo); err != nil {
+		c.JSON(http.StatusOK, models.Response{
+			Code: http.StatusBadRequest,
+			Msg:  "参数不全",
+		})
+		return
+	}
+
+	var post models.Post
+	database.DB.First(&post, PostIdInt)
+	post.Title = postTo.Title
+	post.Content = postTo.Content
+	userId, _ := c.Get("userId")
+	if post.UserID != userId.(uint) {
+		c.JSON(http.StatusOK, models.Response{
+			Code: http.StatusForbidden,
+			Msg:  "user not allowed",
+		})
+		return
+	}
+	err = database.DB.Model(&post).Omit("created_at").Updates(post).Error
+	if err != nil {
+		c.JSON(http.StatusOK, models.Response{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+	} else {
+		c.JSON(http.StatusOK, models.Response{
+			Code: http.StatusOK,
+			Data: post.ID,
+		})
+	}
 }

@@ -28,6 +28,8 @@ func InitRoute(g *gin.Engine) {
 		authPosts := posts.Group("").Use(middlewares.AuthLogin())
 		{
 			authPosts.POST("", controllers.CreatePost)
+			authPosts.DELETE("/:id", controllers.DeletePostById)
+			authPosts.PUT("/:id", controllers.UpdatePostById)
 		}
 	}
 }
