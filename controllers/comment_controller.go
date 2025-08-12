@@ -28,5 +28,32 @@ func GetCommentsByPostId(c *gin.Context) {
 			Code: http.StatusOK,
 		})
 	}
+}
+
+func CreateComment(c *gin.Context) {
+	var commentTo models.CommentTO
+	if err := c.ShouldBindJSON(&commentTo); err != nil {
+		c.JSON(http.StatusOK, models.Response{
+			Msg:  err.Error(),
+			Code: http.StatusBadRequest,
+		})
+	}
+
+	comment := models.Comment{
+		Content: commentTo.Content,
+		PostID:  commentTo.PostID,
+		UserID:  0,
+	}
+	if err := comment.CreateComment(); err != nil {
+		c.JSON(http.StatusOK, models.Response{
+			Msg:  err.Error(),
+			Code: http.StatusBadRequest,
+		})
+	} else {
+		c.JSON(http.StatusOK, models.Response{
+			Code: http.StatusOK,
+			Data: comment.ID,
+		})
+	}
 
 }

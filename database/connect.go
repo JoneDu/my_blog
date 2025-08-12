@@ -14,7 +14,8 @@ func InitDB() error {
 	config := conf.LoadConfig()
 
 	db, err := gorm.Open(mysql.Open(config.DbDsn), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
+		Logger:                                   logger.Default.LogMode(logger.Info),
+		DisableForeignKeyConstraintWhenMigrating: true,
 	})
 	if err != nil {
 		log.Fatal(err)

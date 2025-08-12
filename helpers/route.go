@@ -10,5 +10,12 @@ func InitRoute(g *gin.Engine) {
 	comments := g.Group("/comments")
 	{
 		comments.GET("/post/:id", controllers.GetCommentsByPostId)
+		comments.POST("", controllers.CreateComment)
+	}
+
+	// 用户
+	users := g.Group("/users")
+	{
+		users.POST("", controllers.Register)
 	}
 }
