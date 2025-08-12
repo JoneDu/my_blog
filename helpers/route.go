@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"github.com/Bruce/my-blog/controllers"
+	"github.com/Bruce/my-blog/middlewares"
 	"github.com/gin-gonic/gin"
 )
 
@@ -10,7 +11,7 @@ func InitRoute(g *gin.Engine) {
 	comments := g.Group("/comments")
 	{
 		comments.GET("/post/:id", controllers.GetCommentsByPostId)
-		comments.POST("", controllers.CreateComment)
+		comments.POST("", middlewares.AuthLogin(), controllers.CreateComment)
 	}
 
 	// 用户
@@ -18,5 +19,10 @@ func InitRoute(g *gin.Engine) {
 	{
 		users.POST("", controllers.Register)
 		users.POST("/login", controllers.Login)
+	}
+
+	posts := g.Group("/posts").Use(middlewares.AuthLogin())
+	{
+		posts.POST("", controllers.CreatePost)
 	}
 }

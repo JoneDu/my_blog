@@ -1,6 +1,9 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"github.com/Bruce/my-blog/database"
+	"gorm.io/gorm"
+)
 
 type Post struct {
 	gorm.Model
@@ -9,4 +12,8 @@ type Post struct {
 	UserID   uint   `gorm:"not null"`
 	User     User
 	Comments []Comment
+}
+
+func (p *Post) CreatePost() error {
+	return database.DB.Create(p).Error
 }
