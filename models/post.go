@@ -17,3 +17,9 @@ type Post struct {
 func (p *Post) CreatePost() error {
 	return database.DB.Create(p).Error
 }
+
+func GetPosts() ([]Post, error) {
+	var posts []Post
+	err := database.DB.Omit("deleted_at").Find(&posts).Error
+	return posts, err
+}

@@ -21,8 +21,13 @@ func InitRoute(g *gin.Engine) {
 		users.POST("/login", controllers.Login)
 	}
 
-	posts := g.Group("/posts").Use(middlewares.AuthLogin())
+	posts := g.Group("/posts")
 	{
-		posts.POST("", controllers.CreatePost)
+		posts.GET("", controllers.GetPosts)
+		posts.GET("/:id", controllers.GetPost)
+		authPosts := posts.Group("").Use(middlewares.AuthLogin())
+		{
+			authPosts.POST("", controllers.CreatePost)
+		}
 	}
 }
