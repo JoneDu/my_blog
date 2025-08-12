@@ -39,10 +39,11 @@ func CreateComment(c *gin.Context) {
 		})
 	}
 
+	u, _ := c.Get("userId")
 	comment := models.Comment{
 		Content: commentTo.Content,
 		PostID:  commentTo.PostID,
-		UserID:  0,
+		UserID:  u.(uint),
 	}
 	if err := comment.CreateComment(); err != nil {
 		c.JSON(http.StatusOK, models.Response{
